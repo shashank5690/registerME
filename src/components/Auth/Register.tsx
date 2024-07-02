@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import useRegister from '../../hooks/useRegister';
+import { useNavigate } from 'react-router-dom';
 
 // Define the schema for the form validation
 const schema = yup.object({
@@ -23,7 +24,8 @@ interface RegisterFormValues {
   roleType: 'user' | 'admin';
 }
 
-const Register = () => {
+const Register: React.FC = () => {
+  const navigate = useNavigate();
   const { registerUser, loading } = useRegister();
   const { control, handleSubmit, formState: { errors } } = useForm<RegisterFormValues>({
     defaultValues: { name: '', email: '', phoneNumber: '', password: '', roleType: 'user' },
@@ -33,9 +35,13 @@ const Register = () => {
   const onSubmit = async (data: RegisterFormValues) => {
     try {
       await registerUser(data);
-      window.location.href = `/profile/${Date.now()}`; // Redirect to the profile page with a new id
+      navigate('/login');  // Redirect to login page after successful registration
     } catch (error) {
-      toast.error((error as Error).message);
+      if ((error as Error).message === 'Only one admin is allowed.') {
+        navigate('/login');  // Redirect to login page when only one admin is allowed
+      } else {
+        toast.error((error as Error).message);
+      }
     }
   };
 

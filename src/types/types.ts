@@ -1,4 +1,3 @@
-// src/types/types.ts
 
 export interface User {
     id: string;
@@ -15,8 +14,10 @@ export interface User {
     roleType: 'user' | 'admin';
   };
   
-  export type ProfileData = {
+  export interface ProfileData {
     name: string;
     phoneNumber: string;
-  };
-  
+    email: string;
+    roleType: 'user' | 'admin';
+    password: string;
+  }

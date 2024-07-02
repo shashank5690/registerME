@@ -1,5 +1,3 @@
-// src/hooks/useRegister.ts
-
 import { useState } from 'react';
 import localforage from 'localforage';
 import { User } from '../contexts/AuthContext';
@@ -16,7 +14,7 @@ interface RegisterData {
 const useRegister = () => {
   const [loading, setLoading] = useState(false);
 
-  const registerUser = async (data: RegisterData) => {
+  const registerUser = async (data: RegisterData): Promise<void> => {
     setLoading(true);
     try {
       const users = (await localforage.getItem<User[]>('users')) || [];
@@ -24,8 +22,8 @@ const useRegister = () => {
 
       // Check if there is already one admin
       if (data.roleType === 'admin' && admin) {
-        toast.error('An admin already exists.');
-        throw new Error('An admin already exists.');
+        toast.warning('Only one admin is allowed.');
+        throw new Error('Only one admin is allowed.');
       }
 
       // Check if the user limit is reached
@@ -44,7 +42,7 @@ const useRegister = () => {
       await localforage.setItem('users', users);
       toast.success('Registration successful!');
     } catch (error) {
-      toast.error((error as Error).message);
+      throw error;
     } finally {
       setLoading(false);
     }

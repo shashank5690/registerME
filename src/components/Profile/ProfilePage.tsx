@@ -1,55 +1,59 @@
 // src/components/Profile/ProfilePage.tsx
 
-import React from 'react';
-import { useForm } from '../../hooks/useForm';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useAuth, User } from '../../contexts/AuthContext';
 import { Typography, TextField, Button, Container } from '@mui/material';
 
-interface ProfilePageProps {
-  id: string;
-}
+const ProfilePage = () => {
+  const { id } = useParams<{ id: string }>();
+  const { getProfile, setProfile, loading } = useAuth();
+  const [user, setUser] = useState<User | null>(null);
+  const [editableUser, setEditableUser] = useState<User | null>(null);
 
-const ProfilePage: React.FC<ProfilePageProps> = ({ id }) => {
-  const { user, loading, handleSave, handleDelete } = useForm(id);
+  useEffect(() => {
+    const fetchUser = async () => {
+      const profile = await getProfile(id || '');
+      setUser(profile);
+      setEditableUser(profile);
+    };
+    fetchUser();
+  }, [id, getProfile]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!user) {
-    return <div>User not found.</div>;
-  }
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (user) {
-      handleSave(user);
+  const handleSave = async () => {
+    if (editableUser) {
+      await setProfile(editableUser);
+      setUser(editableUser);
     }
   };
+
+  if (loading || !user || !editableUser) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Container>
       <Typography variant="h5" gutterBottom>Profile Details</Typography>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => e.preventDefault()}>
         <TextField
           label="Name"
-          value={user.name}
-          onChange={(e) => (user.name = e.target.value)}
+          value={editableUser.name}
+          onChange={(e) => setEditableUser({ ...editableUser, name: e.target.value })}
           fullWidth
         />
         <TextField
           label="Email"
-          value={user.email}
-          onChange={(e) => (user.email = e.target.value)}
+          value={editableUser.email}
+          onChange={(e) => setEditableUser({ ...editableUser, email: e.target.value })}
           fullWidth
         />
         <TextField
           label="Phone Number"
-          value={user.phoneNumber}
-          onChange={(e) => (user.phoneNumber = e.target.value)}
+          value={editableUser.phoneNumber}
+          onChange={(e) => setEditableUser({ ...editableUser, phoneNumber: e.target.value })}
           fullWidth
         />
-        <Button type="submit" variant="contained" color="primary">Save</Button>
-        <Button onClick={handleDelete} variant="contained" color="secondary">Delete</Button>
+        <Button variant="contained" color="primary" onClick={handleSave}>Save</Button>
       </form>
     </Container>
   );

@@ -1,5 +1,3 @@
-// src/pages/UserProfilePage.tsx
-
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
@@ -13,12 +11,15 @@ import { toast } from 'react-toastify';
 const schema = yup.object({
   name: yup.string().required('Name is required'),
   phoneNumber: yup.string().required('Phone Number is required'),
+  email: yup.string().required('Email is required').email('Email is invalid'),
+  roleType: yup.mixed<'user' | 'admin'>().oneOf(['user', 'admin']).required('Role Type is required'),
+  password: yup.string().required('Password is required')
 }).required();
 
 const UserProfilePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user, getProfile, setProfile } = useAuth();
+  const { getProfile, setProfile } = useAuth();
   const { control, handleSubmit, setValue, formState: { errors } } = useForm<ProfileData>({
     resolver: yupResolver(schema),
   });
@@ -26,9 +27,8 @@ const UserProfilePage: React.FC = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (!id) {
-        // Handle the case where id is undefined
         toast.error('User ID is not provided.');
-        navigate('/login');  // Redirect to login or any other appropriate page
+        navigate('/login');
         return;
       }
 
@@ -36,9 +36,12 @@ const UserProfilePage: React.FC = () => {
       if (profile) {
         setValue('name', profile.name);
         setValue('phoneNumber', profile.phoneNumber);
+        setValue('email', profile.email);
+        setValue('roleType', profile.roleType);
+        setValue('password', profile.password);
       } else {
         toast.error('User not found.');
-        navigate('/login');  // Redirect to login or any other appropriate page
+        navigate('/login');
       }
     };
 
@@ -46,11 +49,14 @@ const UserProfilePage: React.FC = () => {
   }, [id, getProfile, navigate, setValue]);
 
   const onSubmit: SubmitHandler<ProfileData> = async (data) => {
-    if (user) {
+    if (id) {
       const updatedUser = {
-        ...user,
+        id,
         name: data.name,
         phoneNumber: data.phoneNumber,
+        email: data.email,
+        roleType: data.roleType,
+        password: data.password,
       };
       await setProfile(updatedUser);
       toast.success('Profile updated successfully!');
@@ -91,6 +97,52 @@ const UserProfilePage: React.FC = () => {
             />
           )}
         />
+        <Controller
+          name="email"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Email"
+              fullWidth
+              margin="normal"
+              error={!!errors.email}
+              helperText={errors.email?.message}
+              InputLabelProps={{ shrink: true }}
+            />
+          )}
+        />
+        {/* <Controller
+          name="roleType"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Role Type"
+              fullWidth
+              margin="normal"
+              error={!!errors.roleType}
+              helperText={errors.roleType?.message}
+              InputLabelProps={{ shrink: true }}
+            />
+          )}
+        /> */}
+        {/* <Controller
+          name="password"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Password"
+              type="password"
+              fullWidth
+              margin="normal"
+              error={!!errors.password}
+              helperText={errors.password?.message}
+              InputLabelProps={{ shrink: true }}
+            />
+          )}
+        /> */}
         <Button type="submit" variant="contained" color="primary">Save</Button>
       </form>
     </Container>
