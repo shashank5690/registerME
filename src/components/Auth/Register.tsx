@@ -1,6 +1,8 @@
+// src/pages/Register.tsx
+
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { TextField, Button, Typography, Container, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { TextField, Button, Typography, Container, FormControl, InputLabel, Select, MenuItem, CircularProgress, Box } from '@mui/material';
 import { toast } from 'react-toastify';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -48,45 +50,51 @@ const Register: React.FC = () => {
   return (
     <Container>
       <Typography variant="h4" gutterBottom>Register</Typography>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Controller
-          name="name"
-          control={control}
-          render={({ field }) => <TextField {...field} label="Name" fullWidth margin="normal" error={!!errors.name} helperText={errors.name?.message} />}
-        />
-        <Controller
-          name="email"
-          control={control}
-          render={({ field }) => <TextField {...field} label="Email" type="email" fullWidth margin="normal" error={!!errors.email} helperText={errors.email?.message} />}
-        />
-        <Controller
-          name="phoneNumber"
-          control={control}
-          render={({ field }) => <TextField {...field} label="Phone Number" fullWidth margin="normal" error={!!errors.phoneNumber} helperText={errors.phoneNumber?.message} />}
-        />
-        <Controller
-          name="password"
-          control={control}
-          render={({ field }) => <TextField {...field} label="Password" type="password" fullWidth margin="normal" error={!!errors.password} helperText={errors.password?.message} />}
-        />
-        <Controller
-          name="roleType"
-          control={control}
-          render={({ field }) => (
-            <FormControl fullWidth margin="normal" error={!!errors.roleType}>
-              <InputLabel>Role</InputLabel>
-              <Select {...field} label="Role">
-                <MenuItem value="user">User</MenuItem>
-                <MenuItem value="admin">Admin</MenuItem>
-              </Select>
-              {errors.roleType && <p>{errors.roleType.message}</p>}
-            </FormControl>
-          )}
-        />
-        <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
-          {loading ? 'Registering...' : 'Register'}
-        </Button>
-      </form>
+      {loading ? (
+        <Box display="flex" justifyContent="center" alignItems="center">
+          <CircularProgress />
+        </Box>
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Controller
+            name="name"
+            control={control}
+            render={({ field }) => <TextField {...field} label="Name" fullWidth margin="normal" error={!!errors.name} helperText={errors.name?.message} />}
+          />
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => <TextField {...field} label="Email" type="email" fullWidth margin="normal" error={!!errors.email} helperText={errors.email?.message} />}
+          />
+          <Controller
+            name="phoneNumber"
+            control={control}
+            render={({ field }) => <TextField {...field} label="Phone Number" fullWidth margin="normal" error={!!errors.phoneNumber} helperText={errors.phoneNumber?.message} />}
+          />
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => <TextField {...field} label="Password" type="password" fullWidth margin="normal" error={!!errors.password} helperText={errors.password?.message} />}
+          />
+          <Controller
+            name="roleType"
+            control={control}
+            render={({ field }) => (
+              <FormControl fullWidth margin="normal" error={!!errors.roleType}>
+                <InputLabel>Role</InputLabel>
+                <Select {...field} label="Role">
+                  <MenuItem value="user">User</MenuItem>
+                  <MenuItem value="admin">Admin</MenuItem>
+                </Select>
+                {errors.roleType && <p>{errors.roleType.message}</p>}
+              </FormControl>
+            )}
+          />
+          <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
+            {loading ? 'Registering...' : 'Register'}
+          </Button>
+        </form>
+      )}
     </Container>
   );
 };

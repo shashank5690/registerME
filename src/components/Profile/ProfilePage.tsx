@@ -3,13 +3,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth, User } from '../../contexts/AuthContext';
-import { Typography, TextField, Button, Container } from '@mui/material';
+import { Typography, TextField, Button, Container, CircularProgress, Box } from '@mui/material';
 
 const ProfilePage = () => {
   const { id } = useParams<{ id: string }>();
   const { getProfile, setProfile, loading } = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [editableUser, setEditableUser] = useState<User | null>(null);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -21,15 +22,29 @@ const ProfilePage = () => {
   }, [id, getProfile]);
 
   const handleSave = async () => {
+    setSaving(true);
     if (editableUser) {
       await setProfile(editableUser);
       setUser(editableUser);
     }
+    setSaving(false);
   };
 
   if (loading || !user || !editableUser) {
-    return <div>Loading...</div>;
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+      </Box>
+    );
   }
+
+  // if (loading) {
+  //   return (
+  //     <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+  //       <CircularProgress />
+  //     </Box>
+  //   );
+  // }
 
   return (
     <Container>
@@ -53,7 +68,11 @@ const ProfilePage = () => {
           onChange={(e) => setEditableUser({ ...editableUser, phoneNumber: e.target.value })}
           fullWidth
         />
-        <Button variant="contained" color="primary" onClick={handleSave}>Save</Button>
+        <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+          <Button variant="contained" color="primary" onClick={handleSave} disabled={saving}>
+            {saving ? <CircularProgress size={24} /> : 'Save'}
+          </Button>
+        </Box>
       </form>
     </Container>
   );

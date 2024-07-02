@@ -37,6 +37,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (email: string, password: string, roleType: 'user' | 'admin') => {
     setLoading(true);  // Start loading
     try {
+      await new Promise((resolve) => setTimeout(resolve, 2000));  // Simulate async operation
       const users = (await localforage.getItem<User[]>('users')) || [];
       const foundUser = users.find(u => u.email === email && u.password === password && u.roleType === roleType);
 
@@ -65,26 +66,35 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const getProfile = async (id: string) => {
+    setLoading(true);  // Start loading
     try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));  // Simulate async operation
       const users = (await localforage.getItem<User[]>('users')) || [];
       return users.find(user => user.id === id) || null;
     } catch (error) {
       toast.error('Error fetching user profile.');
       return null;
+    } finally {
+      setLoading(false);  // Stop loading
     }
   };
 
   const setProfile = async (user: User) => {
+    setLoading(true);  // Start loading
     try {
+      await new Promise((resolve) => setTimeout(resolve, 500));  // Simulate async operation
       const users = (await localforage.getItem<User[]>('users')) || [];
       const index = users.findIndex(u => u.id === user.id);
       if (index !== -1) {
         users[index] = user;
         await localforage.setItem('users', users);
         await localforage.setItem('currentUser', user); // Update the current user in storage
+        // toast.success('Profile updated successfully.');
       }
     } catch (error) {
       toast.error('Error updating user profile.');
+    } finally {
+      setLoading(false);  // Stop loading
     }
   };
 

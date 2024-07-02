@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
-import { TextField, Button, Typography, Container, FormControl, InputLabel, Select, MenuItem, CircularProgress } from '@mui/material';
+import { TextField, Button, Typography, Container, FormControl, InputLabel, Select, MenuItem, CircularProgress, Box} from '@mui/material';
 import { User, useAuth } from '../../contexts/AuthContext';
 import { LoginData } from '../../types/types';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -53,6 +53,11 @@ const Login = () => {
   return (
     <Container>
       <Typography variant="h4" gutterBottom>Login</Typography>
+      {loading ? (
+        <Box display="flex" justifyContent="center" alignItems="center">
+          <CircularProgress />
+        </Box>
+      ) : (
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
           name="email"
@@ -65,23 +70,24 @@ const Login = () => {
           render={({ field }) => <TextField {...field} label="Password" type="password" fullWidth margin="normal" error={!!errors.password} helperText={errors.password?.message} />}
         />
         <Controller
-          name="roleType"
-          control={control}
-          render={({ field }) => (
-            <FormControl fullWidth margin="normal" error={!!errors.roleType}>
-              <InputLabel>Role</InputLabel>
-              <Select {...field} label="Role">
-                <MenuItem value="user">User</MenuItem>
-                <MenuItem value="admin">Admin</MenuItem>
-              </Select>
-              {errors.roleType && <Typography color="error">{errors.roleType.message}</Typography>}
-            </FormControl>
-          )}
-        />
-        <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
-          {loading ? <CircularProgress size={24} color="inherit" /> : 'Login'}  {/* Added CircularProgress spinner for loading state */}
-        </Button>
-      </form>
+            name="roleType"
+            control={control}
+            render={({ field }) => (
+              <FormControl fullWidth margin="normal" error={!!errors.roleType}>
+                <InputLabel>Role</InputLabel>
+                <Select {...field} label="Role">
+                  <MenuItem value="user">User</MenuItem>
+                  <MenuItem value="admin">Admin</MenuItem>
+                </Select>
+                {errors.roleType && <p>{errors.roleType.message}</p>}
+              </FormControl>
+            )}
+          />
+          <Button type="submit" variant="contained" color="primary" fullWidth disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
+          </Button>
+        </form>
+      )}
     </Container>
   );
 };
