@@ -1,12 +1,18 @@
 // src/components/Common/Navbar.tsx
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Button, Typography } from '@mui/material';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');  // Redirect to login page after logout
+  };
 
   return (
     <AppBar position="static">
@@ -34,7 +40,7 @@ const Navbar = () => {
             </Button>
           </>
         ) : (
-          <Button color="inherit" onClick={logout}>
+          <Button color="inherit" onClick={handleLogout}>
             Logout
           </Button>
         )}
