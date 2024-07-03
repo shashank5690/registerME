@@ -28,7 +28,8 @@ const useRegister = () => {
 
       // Check if the user limit is reached
       if (data.roleType === 'user' && users.length >= 5) {
-        toast.error('User limit reached.');
+        // console.log("onetimw")
+        // toast.error('User limit reached.');
         throw new Error('User limit reached.');
       }
 
