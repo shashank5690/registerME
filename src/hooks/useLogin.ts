@@ -1,4 +1,3 @@
-// src/hooks/useLogin.ts
 
 import { useState } from 'react';
 import { User } from '../contexts/AuthContext';
