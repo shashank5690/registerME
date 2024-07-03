@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { User } from '../../contexts/AuthContext';
-import { Button, Typography, Container } from '@mui/material';
+import { Container, Typography, Button, Box, List, ListItem } from '@mui/material';
 
 interface UserListProps {
   users: User[];
@@ -13,28 +13,34 @@ interface UserListProps {
 const UserList: React.FC<UserListProps> = ({ users, handleEdit, handleDelete }) => {
   return (
     <Container>
-      <Typography variant="h4" gutterBottom>User List</Typography>
-      <ul>
+      <Typography variant="h3" gutterBottom>User List</Typography>
+      <List>
         {users.map(user => (
-          <li key={user.id}>
-            <Typography variant="body1">{user.name} - {user.email}</Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleEdit(user.id)}  // Pass string ID
-            >
-              Edit
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => handleDelete(user.id)}  // Pass string ID
-            >
-              Delete
-            </Button>
-          </li>
+          <ListItem key={user.id} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mb: 2 }}>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {user.name} - {user.email}
+            </Typography>
+            <Box display="flex" gap={2}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleEdit(user.id)}
+                size="large"
+              >
+                Edit
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => handleDelete(user.id)}
+                size="large"
+              >
+                Delete
+              </Button>
+            </Box>
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </Container>
   );
 };
