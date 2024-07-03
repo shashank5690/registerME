@@ -19,7 +19,7 @@ const schema = yup.object({
 const UserProfilePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getProfile, setProfile } = useAuth();
+  const { getProfile, setProfile, user, isAuthenticated } = useAuth();
   const { control, handleSubmit, setValue, formState: { errors } } = useForm<ProfileData>({
     resolver: yupResolver(schema),
   });
@@ -31,7 +31,18 @@ const UserProfilePage: React.FC = () => {
         navigate('/login');
         return;
       }
-      // s
+
+      if (!isAuthenticated) {
+        navigate('/login');
+        return;
+      }
+
+      if (user?.id !== id) {
+        toast.error('You are not authorized to view this profile.');
+        navigate('/login');
+        return;
+      }
+
       const profile = await getProfile(id);
       if (profile) {
         setValue('name', profile.name);
@@ -45,9 +56,8 @@ const UserProfilePage: React.FC = () => {
       }
     };
 
-
     fetchUserProfile();
-  }, [id]);
+  }, [id, isAuthenticated, user,navigate]);
 
   const onSubmit: SubmitHandler<ProfileData> = async (data) => {
     if (id) {
@@ -60,7 +70,8 @@ const UserProfilePage: React.FC = () => {
         password: data.password,
       };
       await setProfile(updatedUser);
-      // toast.success('Profile updated successfully!');
+      toast.success('Profile updated successfully!');
+      navigate(`/profile/${id}`); // Navigate to the updated profile page
     }
   };
 
