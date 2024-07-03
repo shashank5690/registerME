@@ -1,5 +1,3 @@
-// src/contexts/AuthContext.tsx
-
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import localforage from 'localforage';
 import { toast } from 'react-toastify';
@@ -12,7 +10,6 @@ export interface User {
   phoneNumber: string;
   roleType: 'user' | 'admin';
 }
-
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;

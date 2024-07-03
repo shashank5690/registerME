@@ -7,7 +7,7 @@ import { getUser, saveUser, deleteUser } from '../utils/api';
 export const useForm = (id: string) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const { user: authUser } = useAuth();
+  // const { user: authUser } = useAuth();
 
   useEffect(() => {
     const fetchUser = async () => {
