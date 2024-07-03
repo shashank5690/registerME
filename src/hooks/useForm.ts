@@ -1,7 +1,7 @@
 // src/hooks/useForm.ts
 
 import { useState, useEffect } from 'react';
-import { User, useAuth } from '../contexts/AuthContext';
+import { User } from '../contexts/AuthContext';
 import { getUser, saveUser, deleteUser } from '../utils/api';
 
 export const useForm = (id: string) => {

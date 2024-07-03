@@ -1,5 +1,3 @@
-// src/components/Profile/ProfilePage.tsx
-
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth, User } from '../../contexts/AuthContext';
@@ -16,10 +14,12 @@ const ProfilePage = () => {
     const fetchUser = async () => {
       const profile = await getProfile(id || '');
       setUser(profile);
+
+      console.log("hey")
       setEditableUser(profile);
     };
     fetchUser();
-  }, [id, getProfile]);
+  }, [id]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -38,14 +38,6 @@ const ProfilePage = () => {
     );
   }
 
-  // if (loading) {
-  //   return (
-  //     <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-  //       <CircularProgress />
-  //     </Box>
-  //   );
-  // }
-
   return (
     <Container>
       <Typography variant="h5" gutterBottom>Profile Details</Typography>
@@ -53,7 +45,7 @@ const ProfilePage = () => {
         <TextField
           label="Name"
           value={editableUser.name}
-          onChange={(e) => setEditableUser({ ...editableUser, name: e.target.value })}
+           onChange={(e) => setEditableUser({ ...editableUser, name: e.target.value })}
           fullWidth
         />
         <TextField

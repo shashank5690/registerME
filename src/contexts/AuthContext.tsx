@@ -10,6 +10,7 @@ export interface User {
   phoneNumber: string;
   roleType: 'user' | 'admin';
 }
+
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
@@ -17,7 +18,7 @@ interface AuthContextType {
   logout: () => void;
   getProfile: (id: string) => Promise<User | null>;
   setProfile: (user: User) => Promise<void>;
-  loading: boolean;  // Add loading state here
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,19 +30,19 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);  // Add loading state here
+  const [loading, setLoading] = useState(false);
 
   const login = async (email: string, password: string, roleType: 'user' | 'admin') => {
-    setLoading(true);  // Start loading
+    setLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));  // Simulate async operation
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate async operation
       const users = (await localforage.getItem<User[]>('users')) || [];
       const foundUser = users.find(u => u.email === email && u.password === password && u.roleType === roleType);
 
       if (foundUser) {
         setUser(foundUser);
         setIsAuthenticated(true);
-        await localforage.setItem('currentUser', foundUser);  // Store the current user
+        await localforage.setItem('currentUser', foundUser); // Store the current user
         toast.success('Logged in successfully.');
       } else {
         toast.error('Invalid email, password, or role.');
@@ -50,48 +51,47 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } catch (error) {
       toast.error((error as Error).message);
     } finally {
-      setLoading(false);  // Stop loading
+      setLoading(false);
     }
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     setUser(null);
-    localforage.removeItem('currentUser');  // Remove the current user from storage
+    localforage.removeItem('currentUser'); // Remove the current user from storage
     toast.info('Logged out.');
-    window.location.href = '/login';  // Redirect to the login page
+    window.location.href = '/login'; // Redirect to the login page
   };
 
   const getProfile = async (id: string) => {
-    setLoading(true);  // Start loading
+    setLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));  // Simulate async operation
       const users = (await localforage.getItem<User[]>('users')) || [];
       return users.find(user => user.id === id) || null;
     } catch (error) {
       toast.error('Error fetching user profile.');
       return null;
     } finally {
-      setLoading(false);  // Stop loading
+      setLoading(false);
     }
   };
 
   const setProfile = async (user: User) => {
-    setLoading(true);  // Start loading
+    setLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));  // Simulate async operation
+      await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate async operation
       const users = (await localforage.getItem<User[]>('users')) || [];
       const index = users.findIndex(u => u.id === user.id);
       if (index !== -1) {
         users[index] = user;
         await localforage.setItem('users', users);
         await localforage.setItem('currentUser', user); // Update the current user in storage
-        // toast.success('Profile updated successfully.');
+        toast.success('Profile updated successfully.');
       }
     } catch (error) {
       toast.error('Error updating user profile.');
     } finally {
-      setLoading(false);  // Stop loading
+      setLoading(false);
     }
   };
 

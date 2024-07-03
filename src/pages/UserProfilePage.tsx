@@ -31,7 +31,7 @@ const UserProfilePage: React.FC = () => {
         navigate('/login');
         return;
       }
-
+      // s
       const profile = await getProfile(id);
       if (profile) {
         setValue('name', profile.name);
@@ -45,8 +45,9 @@ const UserProfilePage: React.FC = () => {
       }
     };
 
+
     fetchUserProfile();
-  }, [id, getProfile, navigate, setValue]);
+  }, [id]);
 
   const onSubmit: SubmitHandler<ProfileData> = async (data) => {
     if (id) {
@@ -59,7 +60,7 @@ const UserProfilePage: React.FC = () => {
         password: data.password,
       };
       await setProfile(updatedUser);
-      toast.success('Profile updated successfully!');
+      // toast.success('Profile updated successfully!');
     }
   };
 
