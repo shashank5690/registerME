@@ -1,0 +1,15 @@
+.selectField {
+  .MuiSelect-select {
+    color: #424242; /* Dark gray text */
+  }
+  .MuiSelect-icon {
+    color: #424242; /* Dark gray icon */
+  }
+  .MuiInputLabel-root {
+    color: #616161; /* Dark gray label */
+  }
+  .MuiInputBase-root {
+    border-radius: 1rem; /* More rounded corners */
+    border-color: #9e9e9e; /* Dark gray border */
+  }
+}

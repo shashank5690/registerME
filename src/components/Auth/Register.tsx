@@ -48,9 +48,10 @@ const Register: React.FC = () => {
   };
 
   return  (
-    <Container>
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="bg-white shadow-lg rounded-lg p-12 w-full max-w-md">
+    <Container disableGutters maxWidth={false} sx={{ height: '100vh', padding: 0 }}>
+    
+    <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-2xl">
         <Typography
           variant="h4"
           gutterBottom

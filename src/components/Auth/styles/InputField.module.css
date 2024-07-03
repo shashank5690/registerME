@@ -1,0 +1,27 @@
+/* src/components/Auth/styles/InputField.module.css */
+
+.inputField {
+    margin-bottom: 1rem;
+  }
+  
+  .inputField .MuiInputBase-root {
+    border-radius: 1.5px; /* rounded corners */
+    border-color: gray.600; /* dark gray border */
+  }
+  
+  .inputField .MuiInputLabel-root {
+    color: gray.700; /* dark gray label */
+  }
+  
+  .inputField .MuiInputBase-input {
+    color: gray.700; /* dark gray text */
+  }
+  
+  .inputField .MuiInputBase-input::placeholder {
+    color: gray.500; /* dark gray placeholder */
+  }
+
+  .inputField {
+    border-radius: 1rem; /* More rounded corners */
+  }
+  

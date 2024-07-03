@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Hide scrollbars for the entire page */
+body {
+    overflow: hidden;
+  }
+  
+  /* Ensure scrollbars do not appear on the container */
+  html,
+  body {
+    height: 100%;
+  }
+  
