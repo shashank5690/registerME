@@ -52,13 +52,14 @@ const Login = () => {
   return (
     <div className={loginStyles.container}>
       <div className={loginStyles.formContainer}>
-        <Typography
+      <Typography
           variant="h4"
           gutterBottom
         >
-          <div className={loginStyles.title}>
+          <div className="text-center text-4xl font-bold bg-gradient-to-r from-blue-800 to-blue-400 bg-clip-text text-transparent" style={{ fontFamily: 'Roboto' }}>
             Login Form <span className="text-black">🚀</span>
           </div>
+
         </Typography>
         {loading ? (
           <Box display="flex" justifyContent="center" alignItems="center">
@@ -151,6 +152,7 @@ const Login = () => {
               color="success"
               fullWidth
               disabled={loading}
+              className={`${inputStyles.SubmitButton} mb-4`}  
               sx={{
                 mt: 4, // margin-top
                 bgcolor: '#000000', // background color

@@ -57,7 +57,7 @@ const UserProfilePage: React.FC = () => {
     };
 
     fetchUserProfile();
-  }, [id, isAuthenticated, user,navigate]);
+  }, [id, isAuthenticated, user, navigate]);
 
   const onSubmit: SubmitHandler<ProfileData> = async (data) => {
     if (id) {
@@ -70,14 +70,40 @@ const UserProfilePage: React.FC = () => {
         password: data.password,
       };
       await setProfile(updatedUser);
-      toast.success('Profile updated successfully!');
+      // toast.success('Profile updated successfully!');
       navigate(`/profile/${id}`); // Navigate to the updated profile page
     }
   };
 
+  useEffect(() => {
+    // Push a dummy state to the history stack
+    window.history.pushState(null, '', window.location.href);
+
+    const handlePopState = (event: PopStateEvent) => {
+      // Prevent back navigation by re-pushing the state
+      window.history.pushState(null, '', window.location.href);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
   return (
-    <Container>
-      <Typography variant="h5" gutterBottom>Profile Details</Typography>
+    <Container disableGutters maxWidth={false} sx={{ height: '100vh', padding: 0 }}>
+      <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+        <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-2xl">
+      <Typography
+          variant="h4"
+          gutterBottom
+        >
+          <div className="text-center text-4xl font-bold bg-gradient-to-r from-blue-800 to-blue-400 bg-clip-text text-transparent" style={{ fontFamily: 'Roboto' }}>
+            User Profiles <span className="text-black">🚀</span>
+          </div>
+
+        </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
           name="name"
@@ -124,7 +150,8 @@ const UserProfilePage: React.FC = () => {
             />
           )}
         />
-        {/* <Controller
+        {/* 
+        <Controller
           name="roleType"
           control={control}
           render={({ field }) => (
@@ -138,8 +165,8 @@ const UserProfilePage: React.FC = () => {
               InputLabelProps={{ shrink: true }}
             />
           )}
-        /> */}
-        {/* <Controller
+        />
+        <Controller
           name="password"
           control={control}
           render={({ field }) => (
@@ -154,9 +181,29 @@ const UserProfilePage: React.FC = () => {
               InputLabelProps={{ shrink: true }}
             />
           )}
-        /> */}
-        <Button type="submit" variant="contained" color="primary">Save</Button>
+        /> 
+        */}
+        <Button type="submit" 
+        variant="contained" 
+        color="primary"
+        fullWidth
+        sx={{
+          mt: 4, // margin-top
+          bgcolor: '#000000', // background color
+          '&:hover': {
+            bgcolor: '#184ab8', // background color on hover
+          },
+          color: 'white', // text color
+          py: 2, // padding-y
+          px: 4, // padding-x
+          borderRadius: '1rem', // rounded corners
+          fontSize: '1.125rem', // text size
+          fontWeight: 600, // bold text
+        }}
+        >Save</Button>
       </form>
+       </div>
+      </div>
     </Container>
   );
 };
